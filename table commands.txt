@@ -1,0 +1,18 @@
+create table home_buyers(email_id varchar(100), password varchar(100), first_name varchar(100), middle_name varchar(100), last_name varchar(100), contact_number int(12), address varchar(100), buyer_id varchar(100) not null, primary key (buyer_id));
+
+
+
+create table builder(email_id varchar(100) not null, password varchar(100) not null, name varchar(100) not null, contact_number int(12) not null, office_address varchar(100) not null, builder_id varchar(100) not null, primary key (builder_id));
+
+create table project(description varchar(100) not null, name varchar(100) not null, number_of_bedrooms int(2) not null, project_id varchar(100) not null, price float(10,2) not null, address varchar(100) not null, builder_id varchar(100) not null, foreign key(builder_id) references builder(builder_id), primary key (project_id));
+
+
+create table landlords(email_id varchar(100) not null, password varchar(100) not null, first_name varchar(100), middle_name varchar(100), last_name varchar(100), contact_number int(12) not null, address varchar(100) not null, landlord_id varchar(100) not null, primary key (landlord_id));
+
+create table land(price float(10,2) not null,size float(10,2) not null, address varchar(100) not null,landlord_id varchar(100) not null, land_id varchar(100) not null, foreign key(landlord_id) references landlords(landlord_id), primary key (land_id));
+
+
+create table buyers(buyer_id varchar(100) not null, project_id varchar(100) not null, foreign key(project_id) references project(project_id));
+
+
+create table develop(completion_date date not null, builder_id varchar(100) not null, project_id varchar(100) not null, foreign key(project_id) references project(project_id), foreign key(builder_id) references builder(builder_id));
