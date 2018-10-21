@@ -1,0 +1,41 @@
+   
+<form  action="{% url 'signup_builder' %}" method="post">
+	{% csrf_token %}
+	{% if success %}
+		<div>Sign Up Successful,<a href="{% url 'login_builder' %}">Login now</a></div>
+	{% endif %}
+	{% if errors %}
+		<div>
+			Fix the following errors<br/>
+			{% for error in errors %}
+				<span class="error">{{error}}</span><br/>
+			{% endfor %}
+		</div>
+	{% endif %}
+	{% if name %}
+		<input value={{name}} type="text" name="name" required>
+	{% else %}
+		<input placeholder="Enter Company Name" type="text" name="name" required>
+	{% endif %}
+
+	{% if email_id %}
+		<input value={{email_id}} type="email" name="email_id" required>
+	{% else %}
+		<input placeholder="Enter Email" type="email" name="email_id" required>
+	{% endif %}
+
+
+	<input placeholder="Enter Password" type="password" name="password" required>
+	
+	<input placeholder="Confirm Password" type="password" name="password2" required>
+	
+	<input placeholder="Enter Phone Number" type="text" name="contact_number" required>
+
+	{% if address %}
+		<textarea value={{office_address}} type="text" name="office_address" required></textarea>
+	{% else %}
+		<textarea placeholder="Enter office address" type="text" name="office_address" required></textarea>
+	{% endif %}
+	
+	<input type="submit" placeholder="Sign Up">
+</form>

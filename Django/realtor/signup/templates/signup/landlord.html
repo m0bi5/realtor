@@ -1,0 +1,54 @@
+   
+<form  action="{% url 'signup_landlord' %}" method="post">
+	{% csrf_token %}
+	{% if success %}
+		<div>Sign Up Successful,<a href="{% url 'login_landlord' %}">Login now</a></div>
+	{% endif %}
+	{% if errors %}
+		<div>
+			Fix the following errors<br/>
+			{% for error in errors %}
+				<span class="error">{{error}}</span><br/>
+			{% endfor %}
+		</div>
+	{% endif %}
+	{% if first_name %}
+		<input value={{first_name}} type="text" name="first_name" required>
+	{% else %}
+		<input placeholder="Enter First Name" type="text" name="first_name" required>
+	{% endif %}
+
+	{% if middle_name %}
+		<input value={{middle_name}} type="text" name="middle_name" required>
+	{% else %}
+		<input placeholder="Enter Middle Name" type="text" name="middle_name" required>
+	{% endif %}
+
+	{% if last_name %}
+		<input value={{last_name}} type="text" name="last_name" required>
+	{% else %}
+		<input placeholder="Enter Last Name" type="text" name="last_name" required>
+	{% endif %}
+
+
+	{% if email_id %}
+		<input value={{email_id}} type="email" name="email_id" required>
+	{% else %}
+		<input placeholder="Enter Email" type="email" name="email_id" required>
+	{% endif %}
+
+
+	<input placeholder="Enter Password" type="password" name="password" required>
+	
+	<input placeholder="Confirm Password" type="password" name="password2" required>
+	
+	<input placeholder="Enter Phone Number" type="text" name="contact_number" required>
+
+	{% if address %}
+		<textarea value={{address}} type="text" name="address" required></textarea>
+	{% else %}
+		<textarea placeholder="Enter address" type="text" name="address" required></textarea>
+	{% endif %}
+	
+	<input type="submit" placeholder="Sign Up">
+</form>

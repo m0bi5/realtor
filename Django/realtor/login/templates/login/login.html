@@ -1,0 +1,28 @@
+   
+<form  method="post">
+	{% csrf_token %}
+	{% if success %}
+		<div>Sign Up Successful</div>
+	{% endif %}
+	{% if errors %}
+		<div>
+			Fix the following errors<br/>
+			{% for error in errors %}
+				<span class="error">{{error}}</span><br/>
+			{% endfor %}
+		</div>
+	{% endif %}
+	
+
+	{% if email_id %}
+		<input value={{email_id}} type="email" name="email_id" required>
+	{% else %}
+		<input placeholder="Enter Email" type="email" name="email_id" required>
+	{% endif %}
+
+
+	<input placeholder="Enter Password" type="password" name="password" required>
+	
+	
+	<input type="submit" value="Login">
+</form>

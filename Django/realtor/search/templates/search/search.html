@@ -1,0 +1,56 @@
+<form action="{% url 'search' %}" method="post">
+{% csrf_token %}
+<select name="type">
+
+	{% if All %}
+		<option selected>All</option>
+	{% else %}
+		<option>All</option>
+	{% endif %}
+
+
+	{% if Land %}
+		<option selected>Land</option>
+	{% else %}
+		<option>Land</option>
+	{% endif %}
+
+	{% if Appartments %}
+		<option selected>Appartments</option>
+	{% else %}
+		<option>Appartments</option>
+	{% endif %}
+
+</select>
+
+{% if price %}
+	<input name="price" value="{{price}}">
+{% else %}
+	<input name="price" placeholder="Filter by price">
+{% endif %}
+
+
+{% if size %}
+	<input name="size" value="{{size}}">
+{% else %}
+	<input name="size" placeholder="Filter by size">
+{% endif %}
+
+
+{% if city %}
+	<input name="city" value="{{city}}">
+{% else %}
+	<input name="city" placeholder="Filter by city">
+{% endif %}
+
+
+<input type="submit" placeholder="Search">
+</form>
+
+{% if result %}
+
+<div id="result">
+{{result}}
+</div>
+
+{% endif %}
