@@ -1,0 +1,14 @@
+<div>
+	<div id='about_me'>
+		{{user_details}}
+	</div>
+	<a href="{% url 'edit' %}">Edit profile</a>
+	<div id='properties'>
+		{{properties}}
+	</div>	
+	{%if builder%}
+		<div id='built'>
+			{{built}}
+		</div>
+	{%endif%}
+</div>

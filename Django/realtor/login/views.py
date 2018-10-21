@@ -1,38 +1,68 @@
 from django.shortcuts import render
 import random
+from django.http import HttpResponseRedirect
 import re
 from home.models import Builder,Buyers,Develop,HomeBuyers,Land,Landlords,Project
 
 # Create your views here.
 
 from django.contrib.auth.decorators import login_required
-
-def login_home_buyer(request):
+def logout(request):
+	del request.session['type']
+	del request.session['user_id']
+	return HttpResponseRedirect('/')
+def login(request):
+	print(request.POST)
 	context={'error':''}
 	if request.method != 'POST':
-		raise Http404('Only POSTs are allowed')
+		return render(request,'login/login.html',context)
+	hb_obj=None
+	b_obj=None
+	ll_obj=None
 	try:
-		obj = HomeBuyers.objects.get(email_id=request.POST['email_id'])
-		if obj.get_details()['password'] == request.POST['password']:
-			request.session['id'] = obj.get_details()['buyer_id']
+		hb_obj = HomeBuyers.objects.get(email_id=request.POST['email_id'])
+	except:
+		a=0
+	try:
+		b_obj = Builder.objects.get(email_id=request.POST['email_id'])
+	except:
+		a=0
+	try:
+		ll_obj = Landlords.objects.get(email_id=request.POST['email_id'])
+	except:
+		a=0
+	if hb_obj:
+		obj = hb_obj
+		if obj.password == request.POST['password']:
 			request.session['type']='HomeBuyer'
-			return render(request,'dashboard/dashboard.html',context)
+			request.session['user_id']=obj.get_details()['buyer_id']
+			return HttpResponseRedirect('/dashboard')
 		else:
 			context['error']="Password incorrect"
 			return render(request,'login/login.html',context)
-	except HomeBuyers.DoesNotExist:
-		context['error']="Invalid Email ID"
-		return render(request,'login/login.html',context)
+
+	if b_obj:
+		obj = b_obj
+		if obj.password == request.POST['password']:
+			request.session['type']='Builder'
+			request.session['user_id']=obj.get_details()['builder_id']
+
+			return HttpResponseRedirect('/dashboard')
+		else:
+			context['error']="Password incorrect"
+			return render(request,'login/login.html',context)
 
 
-def login_landlord(request):
+	if ll_obj:
+		obj = ll_obj
+		if obj.password == request.POST['password']:
+			request.session['type']='Landlord'
+			request.session['user_id']=obj.get_details()['landlord_id']
 
-	#"INSERT INTO home_buyers (email_id,password,first_name,middle_name,last_name,contact_number,address,buyer_id) VALUES (%s, %s,%s, %s,%s, %s,%s, %s)"
-	context={}
-	return render(request,'login/login.html',context)
+			return HttpResponseRedirect('/dashboard')
+		else:
+			context['error']="Password incorrect"
+			return render(request,'login/login.html',context)
+	
 
-def login_builder(request):
 
-	#"INSERT INTO home_buyers (email_id,password,first_name,middle_name,last_name,contact_number,address,buyer_id) VALUES (%s, %s,%s, %s,%s, %s,%s, %s)"
-	context={}
-	return render(request,'login/login.html',context)

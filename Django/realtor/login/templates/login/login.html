@@ -1,5 +1,5 @@
    
-<form  method="post">
+<form action="{% url 'login' %}" method="post">
 	{% csrf_token %}
 	{% if success %}
 		<div>Sign Up Successful</div>

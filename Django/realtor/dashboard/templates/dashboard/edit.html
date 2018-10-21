@@ -1,0 +1,24 @@
+<form method="post" action="{% url 'edit' %}">
+	{% csrf_token %}
+	{% if errors %}
+		<div>
+			Fix the following errors<br/>
+			{% for error in errors %}
+				<span class="error">{{error}}</span><br/>
+			{% endfor %}
+		</div>
+	{% endif %}
+	<input type="email" name='email_id' value="{{email_id}}">
+	<input type="password" name='password' value="{{password}}">
+	<input placeholder="Confirm password" type="password" name='password2' value="{{password}}">
+	<input type='text' name='contact_number' value="{{contact_number}}">
+
+	{%if builder%}
+		<textarea name='office_address' >{{office_address}}</textarea>
+	{%else%}
+		<textarea name='address' >{{address}}</textarea>
+	{%endif%}
+
+	<input type="submit" value="Edit">
+
+</form>

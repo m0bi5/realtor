@@ -26,7 +26,7 @@ class Buyers(models.Model):
         db_table = 'buyers'
 
     def get_details(self):
-        details={'buyer_id':buyer_id,'project_id':project}
+        details={'buyer_id':self.buyer_id,'project_id':self.project}
         return details
 
 
@@ -67,6 +67,7 @@ class Land(models.Model):
     price = models.FloatField()
     size = models.FloatField()
     address = models.CharField(max_length=100)
+    bought_by = models.CharField(max_length=100)
     landlord = models.ForeignKey('Landlords', models.DO_NOTHING)
     land_id = models.CharField(primary_key=True, max_length=100)
 
@@ -75,7 +76,7 @@ class Land(models.Model):
         db_table = 'land'
 
     def get_details(self):
-        details={'price':self.price,'size':self.size,'address':self.address,'landlord_id':self.landlord,'land_id':self.land_id}
+        details={'price':self.price,'size':self.size,'address':self.address,'landlord_id':self.landlord,'land_id':self.land_id,'bought_by':self.bought_by}
         return details
 
 

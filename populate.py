@@ -97,7 +97,17 @@ def populate_land():
 	for x in cursor.fetchall():
 		landlord_ids.append(x[0])
 
-	query = "INSERT INTO land(price,size,address,landlord_id,land_id) VALUES (%s, %s,%s, %s,%s)"
+	cursor.execute('select builder_id from builder')
+	builder_ids=[]
+	for x in cursor.fetchall():
+		builder_ids.append(x[0])
+
+	cursor.execute('select buyer_id from home_buyers')
+	buyer_ids=[]
+	for x in cursor.fetchall():
+		buyer_ids.append(x[0])
+
+	query = "INSERT INTO land(price,size,address,landlord_id,land_id,bought_by) VALUES (%s, %s,%s,%s, %s,%s)"
 	for i in range(30):
 		no_of_lands=random.choice([0,1,2])
 		if no_of_lands:
@@ -107,7 +117,8 @@ def populate_land():
 				address=pick_address()
 				land_id=random.getrandbits(32)
 				landlord_id=landlord_ids[i]
-				val=(price,size,address,landlord_id,land_id)
+				bought_by=random.choice([random.choice(buyer_ids),random.choice(builder_ids),None])
+				val=(price,size,address,landlord_id,land_id,bought_by)
 				cursor.execute(query,val)
 
 def populate_project():
@@ -164,7 +175,6 @@ def populate_buyers():
 		project_id=random.choice(project_ids)
 		val=(buyer_id,project_id)
 		cursor.execute(query,val)
-
 
 
 connection.commit()
