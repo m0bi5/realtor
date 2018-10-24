@@ -1,0 +1,31 @@
+<form method="post" action="{% url 'addListing' %}">
+	{% csrf_token %}
+	{% if errors %}
+		<div>
+			Fix the following errors<br/>
+			{% for error in errors %}
+				<span class="error">{{error}}</span><br/>
+			{% endfor %}
+		</div>
+	{% endif %}
+
+
+	{%if builder%}
+		<input type="text" name='price' placeholder="Enter price/sq.ft.">
+		<input type="text" name='name' placeholder="Enter project name">
+		<input type="text" name='number_of_bedrooms' placeholder="Enter number of bedrooms">
+		<input type="text" name='size' placeholder="Enter size in sq.ft.">
+		<textarea name='address' placeholder="Enter address" ></textarea>
+		<textarea name='description' placeholder="Enter description" ></textarea>
+		<input type="date" name="completion_date">
+	{%elif landlord%}
+		<input type="text" name='price' placeholder="Enter price/sq.ft.">
+		<input type="text" name='size' placeholder="Enter size in sq.ft.">
+		<textarea name='address' placeholder="Enter address" >{{address}}</textarea>
+	{%else%}
+		<h1>Unauthorised access</h1>
+	{%endif%}
+
+	<input type="submit" value="Edit">
+
+</form>

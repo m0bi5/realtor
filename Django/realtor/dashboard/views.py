@@ -2,7 +2,8 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from home.models import Builder,Buyers,Develop,HomeBuyers,Land,Landlords,Project
 from itertools import chain
-
+import random
+from django.contrib import messages
 
 def dashboard(request):
 	context={'home_buyer':'','user_id':'','properties':[],'landlord':'','builder':'','built':[],'user_details':''}
@@ -13,19 +14,23 @@ def dashboard(request):
 			context['user_details']=HomeBuyers.objects.filter(buyer_id=context['user_id'])[0].get_details()
 		if request.session['type']=='Landlord':
 			context['landlord']='Yes'
-			context['user_details']=Landlord.objects.filter(landlord_id=context['user_id'])[0].get_details()
+			context['user_details']=Landlords.objects.filter(landlord_id=context['user_id'])[0].get_details()
 		if request.session['type']=='Builder':
 			context['builder']='Yes'
 			context['user_details']=Builder.objects.filter(builder_id=context['user_id'])[0].get_details()
 
-	except:
+	except Exception as e:
+		print(e)
 		return HttpResponseRedirect('/')
+	print('Context',context)
 	if context['home_buyer']:
 		land=Land.objects.filter(bought_by=context['user_id'])
 		homes=Buyers.objects.filter(buyer_id=context['user_id'])
 		properties=[]
 		for i in land:
-			properties.append(i.get_details())
+			obj=i.get_details()
+			obj['bought_by']=i.bought_by
+			properties.append(obj)
 		for j in homes:
 			pid=j.get_details()['project_id']
 			pid=pid.get_details()['project_id']
@@ -36,7 +41,9 @@ def dashboard(request):
 		land=Land.objects.filter(landlord_id=context['user_id'])
 		lands=[]
 		for i in land:
-			lands.append(i.get_details())
+			obj=i.get_details()
+			obj['bought_by']=i.bought_by
+			lands.append(obj)
 		context['properties']=lands
 	if context['builder']:
 		land=Land.objects.filter(bought_by=context['user_id'])
@@ -46,7 +53,13 @@ def dashboard(request):
 			purchased.append(i.get_details())
 		built=[]
 		for i in homes:
-			built.append(i.get_details())
+			obj=i.get_details()
+			try:
+				b=Buyers.objects.filter(project_id=i.project_id)[0]
+				obj['bought_by']=b.buyer_id
+				built.append(obj)
+			except:
+				built.append(obj)
 		context['built']=built
 		context['properties']=purchased
 
@@ -64,7 +77,7 @@ def edit(request):
 
 		if request.session['type']=='Landlord':
 			context['landlord']='Yes'
-			obj=Landlord.objects.filter(landlord_id=context['user_id'])[0]
+			obj=Landlords.objects.filter(landlord_id=context['user_id'])[0]
 		if request.session['type']=='Builder':
 			context['builder']='Yes'
 			obj=Builder.objects.filter(builder_id=context['user_id'])[0]
@@ -96,3 +109,95 @@ def edit(request):
 			obj.save()
 			return HttpResponseRedirect('/dashboard')
 	return render(request,'dashboard/edit.html',context)
+
+def addListing(request):
+	obj=None
+	errors=[]
+	context={'home_buyer':'','user_id':'','landlord':'','builder':'','built':[],'email_id':'','contact_number':'','password':'','address':'','errors':[]}
+	try:
+		context['user_id']=request.session['user_id']
+		if request.session['type']=='HomeBuyer':
+			context['home_buyer']='Yes'
+			obj=HomeBuyers.objects.filter(buyer_id=context['user_id'])[0]
+
+		if request.session['type']=='Landlord':
+			context['landlord']='Yes'
+			obj=Landlords.objects.filter(landlord_id=context['user_id'])[0]
+		if request.session['type']=='Builder':
+			context['builder']='Yes'
+			obj=Builder.objects.filter(builder_id=context['user_id'])[0]
+	except:
+		return HttpResponseRedirect('/')
+
+
+
+	if request.POST:
+		if context['landlord']:
+			obj=Land(price=request.POST['price'],size=request.POST['size'],landlord_id=context['user_id'],land_id=random.getrandbits(32),address=request.POST['address'])
+			obj.save()
+			messages.success(request, "Your listing has been saved!")
+			return HttpResponseRedirect('/dashboard')
+
+		if context['builder']:
+			obj=Project(number_of_bedrooms=request.POST['number_of_bedrooms'],price=request.POST['price'],name=request.POST['name'],description=request.POST['description'],size=request.POST['size'],builder_id=context['user_id'],project_id=random.getrandbits(32),address=request.POST['address'])
+			dev=Develop(completion_date=request.POST['completion_date'],builder_id=context['user_id'],project_id=obj.project_id)
+			obj.save()
+			dev.save()
+			messages.success(request, "Your listing has been saved!")
+			return HttpResponseRedirect('/dashboard')
+
+	return render(request,'dashboard/add.html',context)
+
+
+def sell(request):
+	obj=None
+	buyer=None
+	errors=[]
+	context={'home_buyer':'','user_id':'','landlord':'','builder':'','built':[],'email_id':'','contact_number':'','password':'','address':'','errors':[]}
+	try:
+		context['user_id']=request.session['user_id']
+		if request.session['type']=='HomeBuyer':
+			context['home_buyer']='Yes'
+			obj=HomeBuyers.objects.filter(buyer_id=context['user_id'])[0]
+		if request.session['type']=='Landlord':
+			context['landlord']='Yes'
+			obj=Landlords.objects.filter(landlord_id=context['user_id'])[0]
+		if request.session['type']=='Builder':
+			context['builder']='Yes'
+			obj=Builder.objects.filter(builder_id=context['user_id'])[0]
+	except:
+		return HttpResponseRedirect('/')
+
+	if request.POST:
+		a=1
+		if context['landlord']:
+			try:
+				buyer=HomeBuyers.objects.filter(contact_number=request.POST['buyer'])[0]
+				obj=Land.objects.filter(land_id=request.POST['land_id'])[0]
+				obj.bought_by=buyer.buyer_id
+				obj.save()
+				messages.success(request, "Your listing has been marked sold!")
+			except:
+				messages.success(request,'Buyer is not registered to our database')
+				a=0
+			try:
+				buyer=Builder.objects.filter(contact_number=request.POST['buyer'])[0]
+				obj=Land.objects.filter(land_id=request.POST['land_id'])[0]
+				obj.bought_by=buyer.builder_id
+				obj.save()
+				messages.success(request, "Your listing has been marked sold!")
+			except:
+				if a!=0:
+					messages.success(request,'Buyer is not registered to our database')
+
+		if context['builder']:
+			try:
+				buyer=HomeBuyers.objects.filter(contact_number=request.POST['buyer'])[0]
+				obj=Buyers(project_id=request.POST['project_id'],buyer_id=buyer.buyer_id)
+				obj.save()
+				messages.success(request, "Your listing has been marked sold!")
+			except:
+				messages.success(request,'Home buyer is not registered to our database')
+
+		return HttpResponseRedirect('/dashboard')
+

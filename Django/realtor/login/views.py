@@ -12,7 +12,6 @@ def logout(request):
 	del request.session['user_id']
 	return HttpResponseRedirect('/')
 def login(request):
-	print(request.POST)
 	context={'error':''}
 	if request.method != 'POST':
 		return render(request,'login/login.html',context)
@@ -31,7 +30,7 @@ def login(request):
 		ll_obj = Landlords.objects.get(email_id=request.POST['email_id'])
 	except:
 		a=0
-	if hb_obj:
+	if hb_obj!=None:
 		obj = hb_obj
 		if obj.password == request.POST['password']:
 			request.session['type']='HomeBuyer'
@@ -41,7 +40,7 @@ def login(request):
 			context['error']="Password incorrect"
 			return render(request,'login/login.html',context)
 
-	if b_obj:
+	if b_obj!=None:
 		obj = b_obj
 		if obj.password == request.POST['password']:
 			request.session['type']='Builder'
@@ -53,7 +52,7 @@ def login(request):
 			return render(request,'login/login.html',context)
 
 
-	if ll_obj:
+	if ll_obj!=None:
 		obj = ll_obj
 		if obj.password == request.POST['password']:
 			request.session['type']='Landlord'

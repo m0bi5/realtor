@@ -1,14 +1,64 @@
-<div>
-	<div id='about_me'>
-		{{user_details}}
-	</div>
-	<a href="{% url 'edit' %}">Edit profile</a>
-	<div id='properties'>
-		{{properties}}
-	</div>	
-	{%if builder%}
-		<div id='built'>
-			{{built}}
+ <head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+</head> 
+<body>
+
+	<div>
+		{% if messages %}
+			<ul class="messages">
+				{% for message in messages %}
+					<li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+				{% endfor %}
+			</ul>
+		{% endif %}
+		<div id='about_me'>
+			{{user_details}}
 		</div>
-	{%endif%}
-</div>
+		<a href="{% url 'edit' %}">Edit profile</a>
+		<a href="{% url 'addListing' %}">Add listing</a>
+		<div id='properties'>
+			{% for property in properties %}
+				<div class="property">{{property}}</div>
+				{% if not property.bought_by and landlord%}
+					<form method="post" action="{% url 'sell' %}">
+						{% csrf_token %}
+						<a href="#" class='sold' id='{{property.land_id}}'>Mark as sold</a>
+						<input placeholder="Enter contact number of buyer" class='buyer' id='input{{property.land_id}}' name="buyer">				
+						<input hidden="" value="{{property.land_id}}" name="land_id">				
+						<input id='sbutton{{property.land_id}}' class="sbutton" type="submit" value="Sold">
+					</form>
+				{% endif %}
+
+
+
+			{% endfor %}
+		</div>	
+		{%if builder%}
+			<div id='built'>
+			{% for appartment in built %}
+				<div class="appartment">{{appartment}}</div>
+				{% if not appartment.bought_by %}
+					<form method="post" action="{% url 'sell' %}">
+						{% csrf_token %}
+						<a href="#" class='sold' id='{{appartment.project_id}}'>Mark as sold</a>
+						<input placeholder="Enter contact number of buyer" class='buyer' id='input{{appartment.project_id}}' name="buyer">				
+						<input hidden="" value="{{appartment.project_id}}" name="project_id">				
+						<input id='sbutton{{appartment.project_id}}' class="sbutton" type="submit" value="Sold">
+					</form>
+				{% endif %}
+			{% endfor %}
+			</div>
+		{%endif%}
+	</div>
+	<script type="text/javascript">
+		$('.buyer').hide()
+		$('.sbutton').hide()
+		$(".sold").click (function(){
+			$('#input'+$(this).attr('id')).show()
+			$('#sbutton'+$(this).attr('id')).show()
+		});
+
+	</script>
+
+</body>
