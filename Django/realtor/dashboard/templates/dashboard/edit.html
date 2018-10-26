@@ -1,4 +1,4 @@
-<form method="post" action="{% url 'edit' %}">
+<!-- <form method="post" action="{% url 'edit' %}">
 	{% csrf_token %}
 	{% if errors %}
 		<div>
@@ -21,4 +21,91 @@
 
 	<input type="submit" value="Edit">
 
-</form>
+</form> -->
+
+{% load static %}
+
+<html>
+	<head>
+		<title>Edit Profile</title>
+		<link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" id="bootstrap-css">
+		<script src="{% static 'js/bootstrap.min.js' %}"></script>
+		<script src="{% static 'js/jquery.min.js' %}"></script>
+		<link rel="stylesheet" type="text/css" href="{% static 'css/builder.css' %}">
+	</head>
+	<body>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+<div class="container">
+    <div class="row ">
+		
+    	<div class="col-md-5">
+			<form action="{% url 'edit' %}" method="post">
+			{% csrf_token %}
+		<div>
+			{% for error in errors %}
+				<span class="error">{{error}}</span><br/>
+			{% endfor %}
+			</div>
+			<div id="contact-form" class="form-container" data-form-container>
+			<div class="row">
+				<div class="form-title">
+					<span>Edit Profile</span>
+				</div>
+			</div>
+			<div class="input-container">
+				<div class="row">
+					<span class="req-input">
+						
+							{% if email_id %}
+								<input value={{email_id}} type="email" name="email_id" required>
+							{% else %}
+								<input placeholder="Enter Email" type="email" name="email_id" required>
+							{% endif %}
+
+					</span>
+				</div>
+
+				<div class="row">
+					<span class="req-input">
+						
+						<input placeholder="Enter Password" type="password" name="password" required>
+
+					</span>
+				</div>
+
+				<div class="row">
+					<span class="req-input">
+						
+						<input placeholder="Confirm Password" type="password" name="password2" required>	
+					</span>
+				</div>
+
+				<div class="row">
+					<span class="req-input">
+						
+						<input placeholder="Enter Phone Number" type="text" name="contact_number" required>
+					</span>
+				</div>
+				<div class="row">
+					<span class="req-input message-box">
+						{%if builder%}
+						<textarea name='office_address' >{{office_address}}</textarea>
+						{%else%}
+						<textarea name='address' >{{address}}</textarea>
+						{%endif%}				
+				</div>
+				<div class="row submit-row">
+					<button type="submit" class="btn btn-block submit-form">Submit</button>
+				</div>
+			</div>
+			</div>
+			</form>
+		</div>
+       
+	    
+		
+	
+	</div>
+</div>
+</body>
+</html>

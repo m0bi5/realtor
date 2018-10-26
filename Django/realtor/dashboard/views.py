@@ -27,16 +27,19 @@ def dashboard(request):
 		land=Land.objects.filter(bought_by=context['user_id'])
 		homes=Buyers.objects.filter(buyer_id=context['user_id'])
 		properties=[]
+		projects=[]
 		for i in land:
 			obj=i.get_details()
 			obj['bought_by']=i.bought_by
-			properties.append(obj)
+			properties.append({'address':obj['address'],'price':obj['price'],'size':obj['size']})
 		for j in homes:
 			pid=j.get_details()['project_id']
 			pid=pid.get_details()['project_id']
 			proj=Project.objects.filter(project_id=pid)[0]
-			properties.append(proj.get_details())
+			projects.append({'name':proj.name,'address':proj.address,'description':proj.description,'price':proj.price,'size':proj.size,'number_of_bedrooms':proj.number_of_bedrooms})
+		print(projects)
 		context['properties'] = properties
+		context['projects'] = projects
 	if context['landlord']:
 		land=Land.objects.filter(landlord_id=context['user_id'])
 		lands=[]
@@ -51,16 +54,16 @@ def dashboard(request):
 		purchased=[]
 		for i in land:
 			purchased.append(i.get_details())
-		built=[]
+		projects=[]
 		for i in homes:
 			obj=i.get_details()
 			try:
 				b=Buyers.objects.filter(project_id=i.project_id)[0]
 				obj['bought_by']=b.buyer_id
-				built.append(obj)
+				projects.append({'name':obj['name'],'address':obj['address'],'description':obj['description'],'price':obj['price'],'size':obj['size'],'number_of_bedrooms':obj['number_of_bedrooms']})
 			except:
-				built.append(obj)
-		context['built']=built
+				projects.append(obj)
+		context['projects']=projects
 		context['properties']=purchased
 
 	return render(request,'dashboard/dashboard.html',context)
@@ -108,6 +111,9 @@ def edit(request):
 		if not errors:
 			obj.save()
 			return HttpResponseRedirect('/dashboard')
+		else:
+			context['errors']=errors
+			return render(request,'dashboard/edit.html',context)
 	return render(request,'dashboard/edit.html',context)
 
 def addListing(request):

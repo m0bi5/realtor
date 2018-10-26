@@ -1,4 +1,4 @@
-   
+<!--    
 <form  action="{% url 'signup_home_buyer' %}" method="post">
 	{% csrf_token %}
 	{% if success %}
@@ -51,4 +51,123 @@
 	{% endif %}
 	
 	<input type="submit" placeholder="Sign Up">
-</form>
+</form> -->
+
+{% load static %}
+
+<html>
+	<head>
+		<title>Builder SignUp</title>
+		<link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" id="bootstrap-css">
+		<script src="{% static 'js/bootstrap.min.js' %}"></script>
+		<script src="{% static 'js/jquery.min.js' %}"></script>
+		<link rel="stylesheet" type="text/css" href="{% static 'css/builder.css' %}">
+	</head>
+	<body>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+<div class="container">
+    <div class="row ">
+		
+    	<div class="col-md-5">
+			<form action="{% url 'signup_home_buyer' %}" method="post">
+			{% csrf_token %}
+			{% if success %}
+		<div>Sign Up Successful,<a href="{% url 'login_home_buyer' %}">Login now</a></div>
+			{% endif %}
+			{% if errors %}
+		<div>
+			Fix the following errors<br/>
+			{% for error in errors %}
+				<span class="error">{{error}}</span><br/>
+			{% endfor %}
+		</div>
+			{% endif %}
+			<div id="contact-form" class="form-container" data-form-container>
+			<div class="row">
+				<div class="form-title">
+					<span>SignUp</span>
+				</div>
+			</div>
+			<div class="input-container">
+				<div class="row">
+					<span class="req-input" >
+											{% if name %}
+							<input value={{first_name}} type="text" name="first_name" required>
+						{% else %}
+							<input placeholder="Enter First Name" type="text" name="first_name" required>
+						{% endif %}
+					</span>
+				</div>
+
+				<div class="row">
+					<span class="req-input" >
+						{% if name %}
+							<input value={{last_name}} type="text" name="last_name" required>
+						{% else %}
+							<input placeholder="Enter Last Name" type="text" name="last_name" required>
+						{% endif %}
+					</span>
+				</div>
+
+				<div class="row">
+					<span class="req-input" >
+						{% if name %}
+							<input value={{middle_name}} type="text" name="middle_name" required>
+						{% else %}
+							<input placeholder="Enter Middle Name" type="text" name="middle_name" required>
+						{% endif %}
+					</span>
+				</div>
+
+				<div class="row">
+					<span class="req-input">
+							{% if email_id %}
+								<input value={{email_id}} type="email" name="email_id" required>
+							{% else %}
+								<input placeholder="Enter Email" type="email" name="email_id" required>
+							{% endif %}
+
+					</span>
+				</div>
+
+				<div class="row">
+					<span class="req-input">
+						<input placeholder="Enter Password" type="password" name="password" required>
+
+					</span>
+				</div>
+
+				<div class="row">
+					<span class="req-input">
+						<input placeholder="Confirm Password" type="password" name="password2" required>	
+					</span>
+				</div>
+
+				<div class="row">
+					<span class="req-input">
+						<input placeholder="Enter Phone Number" type="text" name="contact_number" required>
+					</span>
+				</div>
+				<div class="row">
+					<span class="req-input message-box">
+							{% if address %}
+								<textarea value={{address}} type="text" name="address" required></textarea>
+							{% else %}
+								<textarea placeholder="Enter address" type="text" name="address" required></textarea>
+							{% endif %}
+				</div>
+				<div class="row submit-row">
+					<button type="submit" class="btn btn-block submit-form">Submit</button>
+				</div>
+			</div>
+			</div>
+			</form>
+		</div>
+       
+	    
+		
+	
+	</div>
+</div>
+</body>
+</html>

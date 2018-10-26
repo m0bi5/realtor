@@ -1,4 +1,4 @@
-   
+<!--    
 <form action="{% url 'login' %}" method="post">
 	{% csrf_token %}
 	{% if success %}
@@ -25,4 +25,66 @@
 	
 	
 	<input type="submit" value="Login">
-</form>
+</form> -->
+{% load static %}
+
+<html>
+	<head>
+		<title>Login</title>
+		<link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" id="bootstrap-css">
+		<script src="{% static 'js/bootstrap.min.js' %}"></script>
+		<script src="{% static 'js/jquery.min.js' %}"></script>
+		<link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">
+	</head>
+	<body>
+<!------ Include the above in your HEAD tag ---------->
+
+		<div class="container">
+		        <div id="login-row" class="row justify-content-center align-items-center">
+		            <div id="login-column" class="col-md-6">
+		                <div class="box">
+		                    <div class="shape1"></div>
+		                    <div class="shape2"></div>
+		                    <div class="shape3"></div>
+		                    <div class="shape4"></div>
+		                    <div class="shape5"></div>
+		                    <div class="shape6"></div>
+		                    <div class="shape7"></div>
+		                    <div class="float">
+		                        <form class="form" action="{% url 'login' %}" method="post">
+                            		{% csrf_token %}
+									{% if success %}
+										<div>Sign Up Successful</div>
+									{% endif %}
+									{% if errors %}
+										<div>
+											Fix the following errors<br/>
+											{% for error in errors %}
+												<span class="error">{{error}}</span><br/>
+											{% endfor %}
+										</div>
+									{% endif %}
+		                            <div class="form-group">
+		                           		<label for="email_id" class="text-white">Email:</label><br>
+		                            	{% if email_id %}
+		                            	<input value={{email_id}} type="email" name="email_id" required>
+		                                {% else %}
+										<input placeholder="Enter Email" type="email" name="email_id" required>
+										{% endif %}
+		                            </div>
+		                            <div class="form-group">
+		                                <label for="password" class="text-white">Password:</label><br>
+										<input placeholder="Enter Password" type="password" name="password" required>
+		                            </div>
+		                            	
+		                            <div class="form-group">
+		                                <input type="submit" name="submit" class="btn btn-info btn-md" value="Login">
+		                            </div>
+		                        </form>
+		                    </div>
+		                </div>
+		            </div>
+		        </div>
+		    </div>
+	</body>
+</html>
