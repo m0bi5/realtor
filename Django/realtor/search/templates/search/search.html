@@ -1,4 +1,4 @@
-<form action="{% url 'search' %}" method="post">
+<!-- <form action="{% url 'search' %}" method="post">
 {% csrf_token %}
 <select name="type">
 
@@ -53,4 +53,107 @@
 {{result}}
 </div>
 
-{% endif %}
+{% endif %} -->
+
+
+{% load static %}
+
+<html>
+	<head>
+		<title>Search</title>
+		<link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" id="bootstrap-css">
+		<script src="{% static 'js/bootstrap.min.js' %}"></script>
+		<script src="{% static 'js/jquery.min.js' %}"></script>
+		<link rel="stylesheet" type="text/css" href="{% static 'css/builder.css' %}">
+	</head>
+	<body>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+<div class="container">
+    <div class="row ">
+		
+    	<div class="col-md-5">
+			<form action="{% url 'search' %}" method="post">
+			{% csrf_token %}
+		<div>
+			{% for error in errors %}
+				<span class="error">{{error}}</span><br/>
+			{% endfor %}
+			</div>
+			<div id="contact-form" class="form-container" data-form-container>
+			<div class="row">
+				<div class="form-title">
+					<span>Search</span>
+				</div>
+			</div>
+
+			<select name="type">
+				{% if All %}
+					<option selected>All</option>
+				{% else %}
+					<option>All</option>
+				{% endif %}
+				{% if Land %}
+					<option selected>Land</option>
+				{% else %}
+					<option>Land</option>
+				{% endif %}
+				{% if Appartments %}	
+					<option selected>Appartments</option>
+				{% else %}
+					<option>Appartments</option>
+				{% endif %}
+			</select>
+			<div class="input-container">
+				<br>
+				<div class="row">
+					
+						
+						{% if price %}
+						<input name="price" value="{{price}}">
+						{% else %}
+						<input name="price" placeholder="Filter by price">
+						{% endif %}	
+
+				</div>
+					
+				<div class="row">
+					
+						{% if size %}
+						<input name="size" value="{{size}}">
+						{% else %}
+						<input name="size" placeholder="Filter by size">
+						{% endif %}
+						
+				</div>
+						
+				<div class="row">
+					
+					{% if city %}
+					<input name="city" value="{{city}}">
+					{% else %}
+					<input name="city" placeholder="Filter by city">
+					{% endif %}
+
+				</div>
+
+				
+				<div class="row submit-row">
+					<button type="submit" class="btn btn-block submit-form">search</button>
+				</div>
+			</div>
+			</div>
+			</form>
+			{% if result %}
+				<div id="result">
+				{{result}}
+				</div>
+			{% endif %}
+		</div>
+       
+	    
+		
+	
+	</div>
+</div>
+</body>
+</html>

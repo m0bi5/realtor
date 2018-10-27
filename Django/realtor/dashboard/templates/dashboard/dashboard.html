@@ -77,13 +77,6 @@
 	</head>
 	<body>
 
-
-		<a href="{% url 'edit' %}">Edit profile</a>
-		{% if not home_buyer %}
-		<a href="{% url 'addListing' %}">Add listing</a>
-		{% endif %}
-
-
 <div class="container emp-profile">
             <form method="post">
                 <div class="row">
@@ -95,7 +88,7 @@
                                    
                             <ul class="nav nav-tabs" id="myTab" role="tablist">
                                 <li class="nav-item">
-                                    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">About</a>
+                                    <a class="nav-link active" id="home-tab" >About</a>
                                 </li>
                                
                             </ul>
@@ -152,16 +145,18 @@
                                             </div>                                            
                                         </div>
                                         {% endif %}	
-
-                                        
+                                        <br>
+                                        <a href="{% url 'edit' %}">Edit profile</a>
+										{% if not home_buyer %}
+										<br>
+										<a href="{% url 'addListing' %}">Add listing</a>
+										{% endif %}        
                             </div>
                         </div>
                     </div>
                 </div>
             </form>           
         </div>
-
-
 <html>
 	<head>
 		<title>Dashboard</title>

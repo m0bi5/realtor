@@ -1,4 +1,4 @@
-<form method="post" action="{% url 'addListing' %}">
+<!-- <form method="post" action="{% url 'addListing' %}">
 	{% csrf_token %}
 	{% if errors %}
 		<div>
@@ -28,4 +28,127 @@
 
 	<input type="submit" value="Edit">
 
-</form>
+</form> -->
+
+{% load static %}
+
+<html>
+	<head>
+		<title>Add Listening</title>
+		<link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" id="bootstrap-css">
+		<script src="{% static 'js/bootstrap.min.js' %}"></script>
+		<script src="{% static 'js/jquery.min.js' %}"></script>
+		<link rel="stylesheet" type="text/css" href="{% static 'css/builder.css' %}">
+	</head>
+	<body>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+<div class="container">
+    <div class="row ">
+		
+    	<div class="col-md-5">
+			<form action="{% url 'addListing' %}" method="post">
+			{% csrf_token %}
+	{% if errors %}
+		<div>
+			Fix the following errors<br/>
+			{% for error in errors %}
+				<span class="error">{{error}}</span><br/>
+			{% endfor %}
+		</div>
+	{% endif %}
+			<div id="contact-form" class="form-container" data-form-container>
+			<div class="row">
+				<div class="form-title">
+					<span>Add</span>
+				</div>
+			</div>
+			{%if builder%}
+			<div class="input-container">
+				
+				<div class="row">
+					<span class="req-input">
+						<input type="text" name='price' placeholder="Enter price/sq.ft.">	
+					</span>
+				</div>
+
+				<div class="row">
+					<span class="req-input">
+						<input type="text" name='name' placeholder="Enter project name">
+					</span>
+				</div>
+
+				<div class="row">
+					<span class="req-input">
+						
+						<input type="text" name='number_of_bedrooms' placeholder="Enter number of bedrooms">						
+					</span>
+				</div>
+
+				<div class="row">
+					<span class="req-input">
+						
+					<input type="text" name='size' placeholder="Enter size in sq.ft.">							
+					</span>
+				</div>
+				<div class="row">
+					<span class="req-input message-box">
+						<textarea name='address' placeholder="Enter address" ></textarea>			
+				</div>
+
+				<div class="row">
+					<span class="req-input message-box">
+
+						<textarea name='description' placeholder="Enter description" ></textarea>
+				</div>
+
+				<div class="row">
+					
+
+						<input type="date" name="completion_date">
+				</div>
+				<div class="row submit-row">
+					<button type="submit" class="btn btn-block submit-form">Submit</button>
+				</div>
+			</div>
+
+			{%elif landlord%}
+			<div class="input-container">
+				
+				<div class="row">
+					<span class="req-input">
+						<input type="text" name='price' placeholder="Enter price/sq.ft.">	
+					</span>
+				</div>
+
+				<div class="row">
+					<span class="req-input">	
+						<input type="text" name='size' placeholder="Enter size in sq.ft.">
+					</span>
+				</div>
+				<div class="row">
+					<span class="req-input message-box">
+						{%if builder%}
+						<textarea name='office_address' >{{office_address}}</textarea>
+						{%else%}
+						<textarea name='address' >{{address}}</textarea>
+						{%endif%}				
+				</div>
+
+				<div class="row submit-row">
+					<button type="submit" class="btn btn-block submit-form">Submit</button>
+				</div>
+			</div>
+			{%else%}
+			<h1>Unauthorised access</h1>
+			{%endif%}
+			</div>
+			</form>
+		</div>
+       
+	    
+		
+	
+	</div>
+</div>
+</body>
+</html>
