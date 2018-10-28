@@ -77,11 +77,11 @@
 	</head>
 	<body>
 
-<div class="container emp-profile">
+<div class="col-md-4 offset-md-4 emp-profile">
             <form method="post">
                 <div class="row">
                    
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <div class="profile-head">
                                     
                                     
@@ -98,26 +98,26 @@
                 </div>
                 <div class="row">
                    
-                    <div class="col-md-8">
+                    <div class="col-md-12">
                         <div class="tab-content profile-tab" id="myTabContent">
                             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                                         
                                         <div class="row">
-                                            <div class="col-md-6">
+                                            <div class="col-md-12">
                                                 <label>Email Id : </label>
                                                 <span>{{ user_details.email_id }}</span>
                                             </div>                                            
                                         </div>
                                         {% if builder %}
                                         <div class="row">
-                                            <div class="col-md-6">
+                                            <div class="col-md-12">
                                                 <label>Company Name : </label>
                                                 <span>{{ user_details.name }}</span>
                                             </div>                                            
                                         </div>
                                         {% else %}
                                          <div class="row">
-                                            <div class="col-md-6">
+                                            <div class="col-md-12">
                                                 <label>Name : </label>
                                                 <span>{{ user_details.first_name }}</span>
                                                 <span>{{ user_details.last_name }}</span>
@@ -125,21 +125,21 @@
                                         </div>
                                         {% endif %}
                                          <div class="row">
-                                            <div class="col-md-6">
+                                            <div class="col-md-12">
                                                 <label>Contact Number : </label>
                                                 <span>{{ user_details.contact_number }}</span>
                                             </div>                                            
                                         </div>
                              		 {% if builder %}
                                         <div class="row">
-                                            <div class="col-md-6">
+                                            <div class="col-md-12">
                                                 <label>Office Address : </label>
                                                 <span>{{ user_details.office_address }}</span>
                                             </div>                                            
                                         </div>
                                         {% else %}
                                          <div class="row">
-                                            <div class="col-md-6">
+                                            <div class="col-md-12">
                                                 <label>Address : </label>
                                                 <span>{{ user_details.address }}</span>
                                             </div>                                            
