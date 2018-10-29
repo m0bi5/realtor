@@ -1,57 +1,3 @@
-<!--    
-<form  action="{% url 'signup_home_buyer' %}" method="post">
-	{% csrf_token %}
-	{% if success %}
-		<div>Sign Up Successful,<a href="{% url 'login_home_buyer' %}">Login now</a></div>
-	{% endif %}
-	{% if errors %}
-		<div>
-			Fix the following errors<br/>
-			{% for error in errors %}
-				<span class="error">{{error}}</span><br/>
-			{% endfor %}
-		</div>
-	{% endif %}
-	{% if first_name %}
-		<input value={{first_name}} type="text" name="first_name" required>
-	{% else %}
-		<input placeholder="Enter First Name" type="text" name="first_name" required>
-	{% endif %}
-
-	{% if middle_name %}
-		<input value={{middle_name}} type="text" name="middle_name" required>
-	{% else %}
-		<input placeholder="Enter Middle Name" type="text" name="middle_name" required>
-	{% endif %}
-
-	{% if last_name %}
-		<input value={{last_name}} type="text" name="last_name" required>
-	{% else %}
-		<input placeholder="Enter Last Name" type="text" name="last_name" required>
-	{% endif %}
-
-
-	{% if email_id %}
-		<input value={{email_id}} type="email" name="email_id" required>
-	{% else %}
-		<input placeholder="Enter Email" type="email" name="email_id" required>
-	{% endif %}
-
-
-	<input placeholder="Enter Password" type="password" name="password" required>
-	
-	<input placeholder="Confirm Password" type="password" name="password2" required>
-	
-	<input placeholder="Enter Phone Number" type="text" name="contact_number" required>
-
-	{% if address %}
-		<textarea value={{address}} type="text" name="address" required></textarea>
-	{% else %}
-		<textarea placeholder="Enter address" type="text" name="address" required></textarea>
-	{% endif %}
-	
-	<input type="submit" placeholder="Sign Up">
-</form> -->
 
 {% load static %}
 
@@ -59,17 +5,63 @@
 	<head>
 		<title>Builder SignUp</title>
 		<link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" id="bootstrap-css">
-		<script src="{% static 'js/bootstrap.min.js' %}"></script>
 		<script src="{% static 'js/jquery.min.js' %}"></script>
+		<script src="{% static 'js/bootstrap.min.js' %}"></script>
 		<link rel="stylesheet" type="text/css" href="{% static 'css/builder.css' %}">
 	</head>
 	<body>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: rgba(255,255,255,0.1)">
+  <a class="navbar-brand" style="padding-right:15px;border-right: white solid 1px" href="{% url 'index' %}">Realtor </a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+    {% if home_buyer or builder or landlord %}
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="../dashboard">Dashboard</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="../search">Search</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="../login/out">Logout</a>
+      </li>
+      
+    </ul>
+    {% else %}
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="../login">Login</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="../search">Search</a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Sign Up
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item" href="../signup/home_buyer">Home Buyer</a>
+          <a class="dropdown-item" href="../signup/builder">Builder</a>
+          <a class="dropdown-item" href="../signup/landlord">Landlord</a>
+        </div>
+      </li>
+    </ul>
+	{% endif %}
+  </div>
+</nav>
+<br>
+<br>
+
 <div class="container">
     <div class="row ">
 		
     	<div class="col-md-5">
-			<form action="{% url 'signup_home_buyer' %}" method="post">
+			<form style="margin-top:-200px;" action="{% url 'signup_home_buyer' %}" method="post">
 			{% csrf_token %}
 			{% if success %}
 		<div>Sign Up Successful,<a href="{% url 'login_home_buyer' %}">Login now</a></div>

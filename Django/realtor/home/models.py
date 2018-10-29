@@ -79,6 +79,9 @@ class Land(models.Model):
         details={'price':self.price,'size':self.size,'address':self.address,'landlord_id':self.landlord,'land_id':self.land_id,'bought_by':self.bought_by}
         return details
 
+    def get_display_details(self):
+        details={'Address':self.address,'Price':str(self.price).split('.')[0]+' Rs/sq. ft.','Size':str(self.size).split('.')[0]+' sq. ft.','Landlord':{'link':self.landlord.landlord_id,'name':self.landlord.first_name+' '+self.landlord.last_name}}
+        return details
 
 class Landlords(models.Model):
     email_id = models.CharField(max_length=100)
@@ -99,7 +102,6 @@ class Landlords(models.Model):
         details={'email_id':self.email_id,'first_name':self.first_name,'middle_name':self.middle_name,'last_name':self.last_name,'contact_number':self.contact_number,'address':self.address,'landlord_id':self.landlord_id}
         return details
 
-
 class Project(models.Model):
     description = models.CharField(max_length=10000, blank=True, null=True)
     name = models.CharField(max_length=100)
@@ -116,4 +118,8 @@ class Project(models.Model):
 
     def get_details(self):
         details={'description':self.description,'name':self.name,'number_of_bedrooms':self.number_of_bedrooms,'project_id':self.project_id,'price':self.price,'address':self.address,'builder_id':self.builder,'size':self.size}
+        return details
+
+    def get_display_details(self):
+        details={'House Name':self.name,'Description':self.description,'Address':self.address,'Price':str(self.price).split('.')[0]+' Rs/sq. ft.','Size':str(self.size).split('.')[0]+' sq. ft.','Bedrooms':self.number_of_bedrooms,'Builder':{'link':self.builder.builder_id,'name':self.builder.name}}
         return details

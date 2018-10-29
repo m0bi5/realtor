@@ -22,47 +22,66 @@ def dashboard(request):
 	except Exception as e:
 		print(e)
 		return HttpResponseRedirect('/')
-	print('Context',context)
 	if context['home_buyer']:
 		land=Land.objects.filter(bought_by=context['user_id'])
 		homes=Buyers.objects.filter(buyer_id=context['user_id'])
 		properties=[]
 		projects=[]
 		for i in land:
-			obj=i.get_details()
-			obj['bought_by']=i.bought_by
-			properties.append({'address':obj['address'],'price':obj['price'],'size':obj['size']})
+			obj=i.get_display_details()
+			properties.append(obj)
 		for j in homes:
 			pid=j.get_details()['project_id']
 			pid=pid.get_details()['project_id']
 			proj=Project.objects.filter(project_id=pid)[0]
-			projects.append({'name':proj.name,'address':proj.address,'description':proj.description,'price':proj.price,'size':proj.size,'number_of_bedrooms':proj.number_of_bedrooms})
-		print(projects)
+			p=proj
+			proj=proj.get_display_details() 
+			temp={'Builder':''}
+			for i in proj:
+				temp[i]=''
+			for i in proj:
+				temp[i]=proj[i]
+			temp['Builder']={'name':Builder.objects.filter(builder_id=p.builder_id)[0].name,'link':p.builder_id}
+			projects.append(proj)
 		context['properties'] = properties
 		context['projects'] = projects
+
 	if context['landlord']:
 		land=Land.objects.filter(landlord_id=context['user_id'])
 		lands=[]
 		for i in land:
-			obj=i.get_details()
-			obj['bought_by']=i.bought_by
+
+			obj=i.get_display_details()
+			b=HomeBuyers.objects.filter(buyer_id=i.bought_by)
+			c=Builder.objects.filter(builder_id=i.bought_by)
+			if len(b):
+				obj['Bought by']={'name':b[0].first_name+" "+b[0].last_name,'link':b[0].buyer_id,'type':'home_buyer'}
+			elif len(c):
+				obj['Bought by']={'name':c[0].name,'link':c[0].builder_id,'type':'builder'}
+			else:
+				obj['land_id']=i.land_id
 			lands.append(obj)
 		context['properties']=lands
+
+
 	if context['builder']:
 		land=Land.objects.filter(bought_by=context['user_id'])
 		homes=Project.objects.filter(builder_id=context['user_id'])
 		purchased=[]
 		for i in land:
-			purchased.append(i.get_details())
+			purchased.append(i.get_display_details())
 		projects=[]
 		for i in homes:
-			obj=i.get_details()
+			obj=i.get_display_details()
 			try:
 				b=Buyers.objects.filter(project_id=i.project_id)[0]
-				obj['bought_by']=b.buyer_id
-				projects.append({'name':obj['name'],'address':obj['address'],'description':obj['description'],'price':obj['price'],'size':obj['size'],'number_of_bedrooms':obj['number_of_bedrooms']})
-			except:
+				b=HomeBuyers.objects.filter(buyer_id=b.buyer_id)[0]
+				obj['Bought by']={'name':b.first_name+" "+b.last_name,'link':b.buyer_id}
 				projects.append(obj)
+			except Exception as e:
+				obj['project_id']=i.project_id
+				projects.append(obj)
+
 		context['projects']=projects
 		context['properties']=purchased
 
@@ -104,6 +123,12 @@ def edit(request):
 			errors.append('Passwords do not match')
 		if len(request.POST['contact_number'])!=10 or request.POST['contact_number'].isupper() or request.POST['contact_number'].islower():
 			errors.append("Contact number invalid")
+
+		if len(Builder.objects.filter(contact_number=request.POST['contact_number'])) + len(Landlords.objects.filter(contact_number=request.POST['contact_number'])) + len(HomeBuyers.objects.filter(contact_number=request.POST['contact_number'])) > 1:
+			errors.append("Contact number registered by another user")
+		if len(Builder.objects.filter(email_id=request.POST['email_id'])) +  len(Landlords.objects.filter(email_id=request.POST['email_id'])) + len(HomeBuyers.objects.filter(email_id=request.POST['email_id'])) > 1:
+			errors.append("Email ID registered by another user")
+
 		if context['builder']:
 			obj.office_address=request.POST['office_address']
 		else:
@@ -153,7 +178,6 @@ def addListing(request):
 			return HttpResponseRedirect('/dashboard')
 
 	return render(request,'dashboard/add.html',context)
-
 
 def sell(request):
 	obj=None
@@ -206,4 +230,3 @@ def sell(request):
 				messages.success(request,'Home buyer is not registered to our database')
 
 		return HttpResponseRedirect('/dashboard')
-

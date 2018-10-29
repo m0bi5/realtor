@@ -1,49 +1,63 @@
-<!-- <form method="post" action="{% url 'addListing' %}">
-	{% csrf_token %}
-	{% if errors %}
-		<div>
-			Fix the following errors<br/>
-			{% for error in errors %}
-				<span class="error">{{error}}</span><br/>
-			{% endfor %}
-		</div>
-	{% endif %}
 
-
-	{%if builder%}
-		<input type="text" name='price' placeholder="Enter price/sq.ft.">
-		<input type="text" name='name' placeholder="Enter project name">
-		<input type="text" name='number_of_bedrooms' placeholder="Enter number of bedrooms">
-		<input type="text" name='size' placeholder="Enter size in sq.ft.">
-		<textarea name='address' placeholder="Enter address" ></textarea>
-		<textarea name='description' placeholder="Enter description" ></textarea>
-		<input type="date" name="completion_date">
-	{%elif landlord%}
-		<input type="text" name='price' placeholder="Enter price/sq.ft.">
-		<input type="text" name='size' placeholder="Enter size in sq.ft.">
-		<textarea name='address' placeholder="Enter address" >{{address}}</textarea>
-	{%else%}
-		<h1>Unauthorised access</h1>
-	{%endif%}
-
-	<input type="submit" value="Edit">
-
-</form> -->
 
 {% load static %}
 
 <html>
 	<head>
-		<title>Add Listening</title>
+		<title>Add Listing</title>
 		<link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" id="bootstrap-css">
-		<script src="{% static 'js/bootstrap.min.js' %}"></script>
 		<script src="{% static 'js/jquery.min.js' %}"></script>
+		<script src="{% static 'js/bootstrap.min.js' %}"></script>
 		<link rel="stylesheet" type="text/css" href="{% static 'css/builder.css' %}">
 	</head>
 	<body>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: rgba(255,255,255,0.1)">
+  <a class="navbar-brand" style="padding-right:15px;border-right: white solid 1px" href="{% url 'index' %}">Realtor </a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+    {% if home_buyer or builder or landlord %}
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="../dashboard">Dashboard</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="../search">Search</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="../login/out">Logout</a>
+      </li>
+      
+    </ul>
+    {% else %}
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="../login">Login</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="../search">Search</a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Sign Up
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item" href="../signup/home_buyer">Home Buyer</a>
+          <a class="dropdown-item" href="../signup/builder">Builder</a>
+          <a class="dropdown-item" href="../signup/landlord">Landlord</a>
+        </div>
+      </li>
+    </ul>
+	{% endif %}
+  </div>
+</nav>
+<br>
+<br>
 <div class="container">
-    <div class="row ">
+    <div style="margin-top: -200px" class="row ">
 		
     	<div class="col-md-5">
 			<form action="{% url 'addListing' %}" method="post">
@@ -59,7 +73,7 @@
 			<div id="contact-form" class="form-container" data-form-container>
 			<div class="row">
 				<div class="form-title">
-					<span>Add</span>
+					<span>Add Listing</span>
 				</div>
 			</div>
 			{%if builder%}
@@ -102,7 +116,7 @@
 				</div>
 
 				<div class="row">
-					
+					<span class="text-light">Enter completion date</span>
 
 						<input type="date" name="completion_date">
 				</div>

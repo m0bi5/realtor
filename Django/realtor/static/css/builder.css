@@ -1,3 +1,7 @@
+
+body{
+    background: -webkit-linear-gradient(left, #3931af, #00c6ff);
+}
 .form-container div, .form-container  span{
     font-family: Calibri, Candara, Segoe, 'Segoe UI', Optima, Arial, sans-serif;
 }

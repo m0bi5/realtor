@@ -1,69 +1,3 @@
-<!--  <head>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
-</head> 
-<body>
-
-	<div>
-		{% if messages %}
-			<ul class="messages">
-				{% for message in messages %}
-					<li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-				{% endfor %}
-			</ul>
-		{% endif %}
-		<div id='about_me'>
-			{{user_details}}
-		</div>
-		<a href="{% url 'edit' %}">Edit profile</a>
-		<a href="{% url 'addListing' %}">Add listing</a>
-		<div id='properties'>
-			{% for property in properties %}
-				<div class="property">{{property}}</div>
-				{% if not property.bought_by and landlord%}
-					<form method="post" action="{% url 'sell' %}">
-						{% csrf_token %}
-						<a href="#" class='sold' id='{{property.land_id}}'>Mark as sold</a>
-						<input placeholder="Enter contact number of buyer" class='buyer' id='input{{property.land_id}}' name="buyer">				
-						<input hidden="" value="{{property.land_id}}" name="land_id">				
-						<input id='sbutton{{property.land_id}}' class="sbutton" type="submit" value="Sold">
-					</form>
-				{% endif %}
-
-
-
-			{% endfor %}
-		</div>	
-		{%if builder%}
-			<div id='built'>
-			{% for appartment in built %}
-				<div class="appartment">{{appartment}}</div>
-				{% if not appartment.bought_by %}
-					<form method="post" action="{% url 'sell' %}">
-						{% csrf_token %}
-						<a href="#" class='sold' id='{{appartment.project_id}}'>Mark as sold</a>
-						<input placeholder="Enter contact number of buyer" class='buyer' id='input{{appartment.project_id}}' name="buyer">				
-						<input hidden="" value="{{appartment.project_id}}" name="project_id">				
-						<input id='sbutton{{appartment.project_id}}' class="sbutton" type="submit" value="Sold">
-					</form>
-				{% endif %}
-			{% endfor %}
-			</div>
-		{%endif%}
-	</div>
-	<script type="text/javascript">
-		$('.buyer').hide()
-		$('.sbutton').hide()
-		$(".sold").click (function(){
-			$('#input'+$(this).attr('id')).show()
-			$('#sbutton'+$(this).attr('id')).show()
-		});
-
-	</script>
-
-</body> -->
-
-
 
 
 {% load static %}
@@ -71,14 +5,76 @@
 	<head>
 		<title>Dashboard</title>
 		<link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" id="bootstrap-css">
-		<script src="{% static 'js/bootstrap.min.js' %}"></script>
 		<script src="{% static 'js/jquery.min.js' %}"></script>
+		<script src="{% static 'js/bootstrap.min.js' %}"></script>
 		<link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}">
 	</head>
 	<body>
 
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: rgba(255,255,255,0.1)">
+  <a class="navbar-brand" style="padding-right:15px;border-right: white solid 1px" href="{% url 'index' %}">Realtor </a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+    {% if home_buyer or builder or landlord %}
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="../dashboard">Dashboard</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="../search">Search</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="../login/out">Logout</a>
+      </li>
+      
+    </ul>
+    {% else %}
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="../login">Login</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="../search">Search</a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Sign Up
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item" href="../signup/home_buyer">Home Buyer</a>
+          <a class="dropdown-item" href="../signup/builder">Builder</a>
+          <a class="dropdown-item" href="../signup/landlord">Landlord</a>
+        </div>
+      </li>
+    </ul>
+	{% endif %}
+  </div>
+</nav>
+<br>
+<br>
+
+
+
+
+<div class="col-md-4 offset-md-4">
+<h2 class="offset-md-4 text-light">Dashboard</h2>
+</div>
+
+{% if messages %}
+	<ul class="messages">
+		{% for message in messages %}
+			<li{% if message.tags %} class="text-light {{ message.tags }}"{% endif %}>{{ message }}</li>
+		{% endfor %}
+	</ul>
+{% endif %}
+
+
+
 <div class="col-md-4 offset-md-4 emp-profile">
             <form method="post">
+            	{% csrf_token %}
                 <div class="row">
                    
                     <div class="col-md-12">
@@ -156,7 +152,8 @@
                     </div>
                 </div>
             </form>           
-        </div>
+</div>
+
 <html>
 	<head>
 		<title>Dashboard</title>
@@ -168,47 +165,193 @@
 
 
 <div class="container-fluid">
-	<div class="row">
+
+    {% if not landlord and properties %}
+    	<h2 class="text-light offset-md-5 ">Properties purchased</h2>
+    {%endif%}
+    {% if landlord and properties %}
+    	<h2 class="text-light offset-md-5 ">Properties listed</h2>
+    {%endif%}
+
 		{% for property in properties %}
-			{% for key, value in property.items %}
-	        <div class="col-md-2 col-sm-3 ">
-	          <div class="wrimagecard wrimagecard-topimage">
-	              <a href="#">
-	              <div class="wrimagecard-topimage_header" style="background-color: rgba(119, 178, 88, 0.1)">
-	              {{ key }}
-	              </div>
-	              <div class="wrimagecard-topimage_title">
-	                <h4>{{ value }}
-	                <div class="pull-right badge" id="WrControls"></div></h4>
-	              </div>
-	            </a>
-	          </div>
-	    	</div>
-	    	{% endfor %}
+		<div class="offset-md-1 col-md-10 row">
+
+
+				{% for key, value in property.items %}
+{% if key != 'land_id' %}
+					{% if key == 'Landlord' and not landlord%}
+
+			        <div class="col-md-2 ">
+				          <div class="wrimagecard wrimagecard-topimage">
+
+				              
+					              <a href="{% url 'lldetail' value.link %}">
+					              <div class="wrimagecard-topimage_header" style="background-color: rgba(119, 178, 88, 0.1)">
+					              {{ key }}
+
+
+					              </div>
+					                <h6>{{value.name}}<br><u>Contact owner</u></h6>
+					              </a>
+					         
+				          </div>
+				    	
+				    	</div>
+
+					{% elif key == 'Bought by' and landlord%}
+
+
+			        <div class="col-md-2 ">
+				          <div class="wrimagecard wrimagecard-topimage">
+
+				              	{% if value.type == 'home_buyer' %}
+					              <a href="{% url 'hbdetail' value.link %}">
+					              <div class="wrimagecard-topimage_header" style="background-color: rgba(119, 178, 88, 0.1)">
+					              {{ key }}
+
+
+					              </div>
+					                <h6>{{value.name}}<br><u>Contact Buyer</u></h6>
+					              </a>
+					         	{% else %}
+					         	  <a href="{% url 'bdetail' value.link %}">
+					              <div class="wrimagecard-topimage_header" style="background-color: rgba(119, 178, 88, 0.1)">
+					              {{ key }}
+
+
+					              </div>
+					                <h6>{{value.name}}<br><u>Contact Buyer</u></h6>
+					              </a>
+					         	{% endif %}
+				          </div>
+				    	
+				    	</div>
+
+			   
+			    	{% else %}
+			    		{% if not landlord or key != 'Landlord' %}
+				        <div class="col-md-2 ">
+				          <div class="wrimagecard wrimagecard-topimage">
+					              <a href="#">
+					              <div class="wrimagecard-topimage_header" style="background-color: rgba(119, 178, 88, 0.1)">
+					              {{ key }}
+					              </div>
+					                <h6>{{value}}</h6>
+					              </a>
+				          </div>
+				    	</div>
+				    	{%endif%}
+
+			    	{% endif %}
+		    {%endif%}
+		    	{% endfor %}
+
+						{% if 'Bought by' not in property.keys and landlord %}
+							<form method="post" action="{% url 'sell' %}">
+								{% csrf_token %}
+								<a class='text-light sold' id='{{property.land_id}}'>Mark as sold</a>
+								<input placeholder="Enter contact number of buyer" class='buyer' id='input{{property.land_id}}' name="buyer">				
+								<input hidden="" value="{{property.land_id}}" name="land_id">				
+								<input id='sbutton{{property.land_id}}' class="sbutton" type="submit" value="Sold">
+							</form>
+						{% endif %}
+
+	    </div>
+	    {% if not forloop.last %}
+   		<hr style="width:85%;border-color: white">
+   		{%endif%}
     	{% endfor %}
 
-    </div>
 
-    	<div class="row">
+
+
+
+
+    	<br>	
+    	<br>	
+    {% if projects and builder%}
+    	<h2 class="text-light offset-md-5 ">Projects Developed</h2>
+    {%endif%}
+
+    {% if projects and not builder%}
+    	<h2 class="text-light offset-md-5 ">Projects Purchased</h2>
+    {%endif%}
+
+
 		{% for project in projects %}
-			{% for key, value in project.items %}
-	        <div class="col-md-2 col-sm-3 ">
-	          <div class="wrimagecard wrimagecard-topimage">
-	              <a href="#">
-	              <div class="wrimagecard-topimage_header" style="background-color: rgba(119, 178, 88, 0.1)">
-	              {{ key }}
-	              </div>
-	              <div class="wrimagecard-topimage_title">
-	                <h4>{{ value }}
-	                <div class="pull-right badge" id="WrControls"></div></h4>
-	              </div>
-	            </a>
-	          </div>
-	    	</div>
-	    	{% endfor %}
-    	{% endfor %}
 
-    </div>
-</div>
-</body>
+		<div class="offset-md-1 col-md-10 row">
+				{% for key, value in project.items %}
+				{%if key != 'project_id' %}
+
+					{% if key != 'Bought by' and key != 'Builder'%}
+				        <div class="col-md-2 ">
+				          <div class="wrimagecard wrimagecard-topimage">
+					              <a href="#">
+					              <div class="wrimagecard-topimage_header" style="background-color: rgba(119, 178, 88, 0.1)">
+					              {{ key }}
+					              </div>
+					                <h6>{{value}}</h6>
+					              </a>
+				          </div>
+				    	</div>
+				    {%endif%}
+				    {% if key == 'Builder' and not builder %}
+				        <div class="col-md-2 ">
+				          <div class="wrimagecard wrimagecard-topimage">
+					                <a href="{% url 'bdetail' value.link %}">
+					              <div class="wrimagecard-topimage_header" style="background-color: rgba(119, 178, 88, 0.1)">
+					              {{ key }}
+					              </div>
+					                <h6>{{value.name}}<br><u>Contact Builder</u></h6>
+					              </a>
+					         
+				          </div>
+				    	</div>
+				    {%endif%}
+					{% if 'Bought' in key %}
+
+			        <div class="col-md-2 ">
+				          <div class="wrimagecard wrimagecard-topimage">
+
+				              
+					              <a href="{% url 'hbdetail' value.link %}">
+					              <div class="wrimagecard-topimage_header" style="background-color: rgba(119, 178, 88, 0.1)">
+					              {{ key }}
+					              </div>
+					                <h6>{{value.name}}<br><u>Contact owner</u></h6>
+					              </a>
+					         
+				          </div>
+				    	
+				    	</div>
+
+					{%endif%}
+				{%else%}
+					<form method="post" action="{% url 'sell' %}">
+						{% csrf_token %}
+						<br>
+						<a class='text-light sold' id='{{project.project_id}}'>Mark as sold</a>
+						<input placeholder="Enter contact number of buyer" class='buyer' id='input{{project.project_id}}' name="buyer">				
+						<input hidden="" value="{{project.project_id}}" name="project_id">				
+						<input id='sbutton{{project.project_id}}' class="sbutton" type="submit" value="Sold">
+					</form>
+			    {% endif %}
+		    	{% endfor %}
+
+	    </div>
+
+	    {% if not forloop.last %}
+   		<hr style="width:85%;border-color: white">
+   		{%endif%}
+    	{% endfor %}
+<script type="text/javascript">
+		$('.buyer').hide()
+		$('.sbutton').hide()
+		$(".sold").click (function(){
+			$('#input'+$(this).attr('id')).show()
+			$('#sbutton'+$(this).attr('id')).show()
+		});
+	</script>
+
        </body>

@@ -49,11 +49,9 @@ def search(request):
 		context={'All':All,'Appartments':Appartments,'Land':Land,'price':price,'city':city,'size':size}
 		print(context)
 		result=get_objects(context)
-		result=[x.get_details() for x in result]
+		result=[x.get_display_details() for x in result]
 		context['result']=result
-		return render(request,'search/search.html',context)
-	else:
-		return render(request,'search/search.html',context)
+	return render(request,'search/search.html',context)
 
 
 def get_objects(query):
@@ -74,8 +72,11 @@ def get_objects(query):
 
 	if query['Appartments']:
 		res=Project.objects.all()
+		buyers=Buyers.objects.all().values_list('project_id')
+		res=res.exclude(project_id__in=buyers)
 	if query['Land']:
 		res=Land.objects.all()
+		res=res.filter(bought_by=None)
 
 	if  not query['All']:
 		if query['price']:

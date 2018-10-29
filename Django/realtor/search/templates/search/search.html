@@ -1,7 +1,64 @@
-<form action="{% url 'search' %}" method="post">
+
+
+{% load static %}
+
+<head>
+	<title>Search</title>
+	<link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" id="bootstrap-css">
+	<script src="{% static 'js/jquery.min.js' %}"></script>
+	<script src="{% static 'js/bootstrap.min.js' %}"></script>
+	<link rel="stylesheet" type="text/css" href="{% static 'css/search.css' %}">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: rgba(255,255,255,0.1)">
+  <a class="navbar-brand" style="padding-right:15px;border-right: white solid 1px" href="{% url 'index' %}">Realtor </a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+    {% if home_buyer or builder or landlord %}
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="../dashboard">Dashboard</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="../search">Search</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="../login/out">Logout</a>
+      </li>
+      
+    </ul>
+    {% else %}
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="../login">Login</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="../search">Search</a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Sign Up
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item" href="../signup/home_buyer">Home Buyer</a>
+          <a class="dropdown-item" href="../signup/builder">Builder</a>
+          <a class="dropdown-item" href="../signup/landlord">Landlord</a>
+        </div>
+      </li>
+    </ul>
+	{% endif %}
+  </div>
+</nav>
+<br>
+<br>
+<h2 class="offset-md-5 text-light"> Search for properties </h2>
+<form class="offset-md-2" action="{% url 'search' %}" method="post">
 {% csrf_token %}
 
-<div class="container" style="padding-top: 20px">
+<div class="container center-block" style="padding-top: 20px">
   <div class="card" style="width:850px">
   
   <div class="card-body">
@@ -12,7 +69,6 @@
 	{% else %}
 		<option>All</option>
 	{% endif %}
-
 
 	{% if Land %}
 		<option selected>Land</option>
@@ -50,64 +106,87 @@
 	<br>
 
  	<div style="padding-top: 15px">
-       <input type="submit" placeholder="Search" class="offset-md-5">     
+       <input type="submit" placeholder="Search"  class="btn btn-default offset-md-5">     
    </div>
 
   </div>
 </div>  
 </div>
 	
-	   
-	                                       
-	
-
-       
-
                                      
                                       
 </form>
 
 
-
 {% if result %}
 
 <div id="result">
-	{% load static %}
-<html>
-	<head>
-		<title>Search</title>
-		<link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" id="bootstrap-css">
-		<script src="{% static 'js/bootstrap.min.js' %}"></script>
-		<script src="{% static 'js/jquery.min.js' %}"></script>
-		<link rel="stylesheet" type="text/css" href="{% static 'css/search.css' %}">
-	</head>
 
-
+	
 <div class="container-fluid">
-	<div class="row">
+
 		{% for property in result %}
+	<div class="offset-md-1 col-md-10 row">
 			{% for key, value in property.items %}
-	        <div class="col-md-2 col-sm-3 ">
+			{% if key == 'Landlord' %}
+
+
+	        <div class="col-md-2 ">
 	          <div class="wrimagecard wrimagecard-topimage">
-	              <a href="#">
-	              <div class="wrimagecard-topimage_header" style="background-color: rgba(119, 178, 88, 0.1)">
-	              {{ key }}
-	              </div>
-	              <div class="wrimagecard-topimage_title">
-	                <h4>{{ value }}
-	                <div class="pull-right badge" id="WrControls"></div></h4>
-	              </div>
-	            </a>
+
+	              
+		              <a href="{% url 'lldetail' value.link %}">
+		              <div class="wrimagecard-topimage_header" style="background-color: rgba(119, 178, 88, 0.1)">
+		              {{ key }}
+
+
+		              </div>
+		                <h6>{{value.name}}<br><u>Contact owner</u></h6>
+		              </a>
+		         
 	          </div>
 	    	</div>
+
+			{% elif key == 'Builder' %}
+
+	        <div class="col-md-2 ">
+	          <div class="wrimagecard wrimagecard-topimage">
+
+	              
+		              <a href="{% url 'bdetail' value.link %}">
+		              <div class="wrimagecard-topimage_header" style="background-color: rgba(119, 178, 88, 0.1)">
+		              {{ key }}
+
+
+		              </div>
+		                <h6>{{value.name}}<br><u>Contact owner</u></h6>
+		              </a>
+		         
+	          </div>
+	    	</div>
+	    	{% else %}
+	    	    <div class="col-md-2 ">
+	          <div class="wrimagecard wrimagecard-topimage">
+
+	              
+		              <a href="#">
+		              <div class="wrimagecard-topimage_header" style="background-color: rgba(119, 178, 88, 0.1)">
+		              {{ key }}
+		              </div>
+		                <h6 style="padding-bottom: 40px;">{{ value }}</h6>
+		              </a>
+		         
+	          </div>
+	    	</div>
+	    	{% endif %}
 	    	{% endfor %}
-    	{% endfor %}
 
     </div>
+    <hr style="width:85%;border-color: white">
+    	{% endfor %}
 
 </div>
 </body>
-       </body>
 
 {% endif %}
 
